@@ -681,4 +681,22 @@ window.onload = function() {
 		})();
 
 	}
+    var ZoomController = (function () {
+        function ZoomController() {
+            var _this = this;
+            this.onZoomIn = function (event) {
+                _this.changeSignal.dispatch(true);
+            };
+            this.onZoomOut = function (event) {
+                _this.changeSignal.dispatch(false);
+            };
+            this.changeSignal = new utils.SimpleSignal();
+            this._zoomIn = document.getElementById("zoom_in");
+            this._zoomOut = document.getElementById("zoom_out");
+            this._zoomIn.addEventListener("click", this.onZoomIn);
+            this._zoomOut.addEventListener("click", this.onZoomOut);
+        }
+        return ZoomController;
+    })();
+
 };
