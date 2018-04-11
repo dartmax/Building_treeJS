@@ -699,4 +699,682 @@ window.onload = function() {
         return ZoomController;
     })();
 
+    (function (utils) {
+        /**
+         * Main logic here:
+         * - check if number of pointers changes (pointer is pressed / released)
+         * - if 2 pointers are pressed: activate pinch zoom, otherwise: deactivate
+         * - dispatch start, update, end events.
+         */
+        var PinchZoomGesture = (function () {
+            function PinchZoomGesture(pointerDetector) {
+                this._active = false;
+                this._pointerDetector = pointerDetector;
+                this.init();
+            }
+            PinchZoomGesture.prototype.init = function () {
+                this.startSignal = new utils.Signal();
+                this.updateSignal = new utils.Signal();
+                this.endSignal = new utils.Signal();
+                this._moveData = {
+                    pointer1: null,
+                    pointer2: null,
+                    startDistance: 0,
+                    distance: 0
+                };
+            };
+            PinchZoomGesture.prototype.listen = function () {
+                this._pointerDetector.down.add(this.onPointerUpOrDown, { scope: this });
+                this._pointerDetector.up.add(this.onPointerUpOrDown, { scope: this });
+            };
+            PinchZoomGesture.prototype.complete = function () {
+            };
+            PinchZoomGesture.prototype.onPointerUpOrDown = function () {
+                var pointersLength = this._pointerDetector.pointersLength;
+                if (!this._active && pointersLength === 2) {
+                    this.activate();
+                }
+                else if (this._active && pointersLength !== 2) {
+                    this.deactivate();
+                }
+            };
+            PinchZoomGesture.prototype.activate = function () {
+                this._active = true;
+                this._moveData.pointer1 = this._pointerDetector.pointerArray[0];
+                this._moveData.pointer2 = this._pointerDetector.pointerArray[1];
+                var distance = this.calculateDistance();
+                this._moveData.startDistance = distance;
+                this._moveData.distance = distance;
+                this.startSignal.dispatch(this._moveData);
+                this._pointerDetector.move.add(this.onPointerMove, { scope: this });
+            };
+            PinchZoomGesture.prototype.deactivate = function () {
+                this._active = false;
+                this.refreshDistance();
+                this.endSignal.dispatch(this._moveData);
+            };
+            PinchZoomGesture.prototype.onPointerMove = function () {
+                // this._active should always be true because we only attach the listener in activate
+                if (this._active) {
+                    this.refreshDistance();
+                    this.updateSignal.dispatch(this._moveData);
+                }
+            };
+            PinchZoomGesture.prototype.refreshDistance = function () {
+                var distance = this.calculateDistance();
+                this._moveData.distance = distance;
+            };
+            PinchZoomGesture.prototype.calculateDistance = function () {
+                var pointer1 = this._moveData.pointer1;
+                var pointer2 = this._moveData.pointer2;
+                var dx = pointer1.localX - pointer2.localX;
+                var dy = pointer1.localY - pointer2.localY;
+                return Math.sqrt(dx * dx + dy * dy);
+            };
+            Object.defineProperty(PinchZoomGesture.prototype, "lastData", {
+                get: function () {
+                    return this._moveData;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return PinchZoomGesture;
+        })();
+        utils.PinchZoomGesture = PinchZoomGesture;
+    })(utils || (utils = {}));
+///<reference path='./../PointerDetector.ts'/>
+///<reference path='./../Pointer.ts'/>
+///<reference path='./../../signal/ISignalP1.ts'/>
+///<reference path='./../../signal/ISignalP2.ts'/>
+///<reference path='./../../signal/Signal.ts'/>
+///<reference path='./PinchZoomGesture.ts'/>
+    var utils;
+    (function (utils) {
+        /**
+         * Manages a simple pan and a pinch zoom gesture in a way that each always
+         * completes a full event cycle, eg.:
+         * - pinch start, [update,] end, pan start, [update,] end
+         * So pinch start is always followed by pinch end (or updates in between),
+         * but never a pan start, they are not interwoven.
+         */
+        var PanAndZoomGestures = (function () {
+            function PanAndZoomGestures(config) {
+                var _this = this;
+                this._panStarted = false;
+                // ==================================================================================================
+                // Pointer events
+                this.onPointerDown = function (pointer) {
+                    // first pointer down -> start pan
+                    _this.tryPanStart();
+                };
+                this.onPointerMove = function (pointer) {
+                    // if 1 pointer down -> update
+                    if (_this._pointerDetector.pointersLength === 1 && _this._panStarted) {
+                        _this._pan.update.dispatch(pointer);
+                    }
+                };
+                this.onPointerUp = function (pointer) {
+                    // this runs whenever a pointer is released:
+                    // A. when panning and that single finger is released
+                    // B. before pinch zoom completes (before onEndPinchZoom)
+                    if (_this._pointerDetector.pointersLength === 0 && _this._panStarted) {
+                        _this.finishPan();
+                    }
+                };
+                // ==================================================================================================
+                // Pinch zoom events
+                this.onStartPinchZoom = function (zoomData) {
+                    // stop pan if it's in progress
+                    if (_this._panStarted) {
+                        _this.finishPan(_this._pinchZoom);
+                    }
+                };
+                this.onEndPinchZoom = function (zoomData) {
+                    // check if a pan needs to be started
+                    // (when switching from 2 fingers to 1)
+                    _this.tryPanStart();
+                };
+                this._pointerDetector = config.pointerDetector || new utils.PointerDetector({
+                    element: config.element,
+                    maxPointers: 2
+                });
+                this.init();
+            }
+            PanAndZoomGestures.prototype.init = function () {
+                this._pan = {
+                    start: new utils.Signal(),
+                    update: new utils.Signal(),
+                    end: new utils.Signal()
+                };
+                this._pointerDetector.down.add(this.onPointerDown);
+                this._pointerDetector.move.add(this.onPointerMove);
+                this._pointerDetector.up.add(this.onPointerUp);
+                this._pinchZoom = new utils.PinchZoomGesture(this._pointerDetector);
+                this._pinchZoom.startSignal.add(this.onStartPinchZoom);
+                this._pinchZoom.endSignal.add(this.onEndPinchZoom);
+                this._pinchZoom.listen();
+            };
+            PanAndZoomGestures.prototype.tryPanStart = function () {
+                if (this._pointerDetector.pointersLength === 1 && !this._panStarted) {
+                    this._panStarted = true;
+                    this._panPointer = this._pointerDetector.pointerArray[0];
+                    // We need to reset dx, dy, offsetX, offsetY, because this is
+                    // considered a new pan start gesture (dispatched here manually).
+                    // Otherwise these properties may have big values, if the user
+                    // moved his fingers during pinching, which would cause some jumpingsure
+                    this._panPointer.dx = 0;
+                    this._panPointer.dy = 0;
+                    this._panPointer.offsetX = 0;
+                    this._panPointer.offsetY = 0;
+                    this._panPointer.startX = this._panPointer.localX;
+                    this._panPointer.startY = this._panPointer.localY;
+                    this._pan.start.dispatch(this._panPointer);
+                }
+            };
+            PanAndZoomGestures.prototype.finishPan = function (breakingGesture) {
+                if (breakingGesture === void 0) { breakingGesture = null; }
+                this._panStarted = false;
+                this._pan.end.dispatch(this._panPointer, breakingGesture);
+                this._panPointer = null;
+            };
+            Object.defineProperty(PanAndZoomGestures.prototype, "pan", {
+                // ==================================================================================================
+                // Getters
+                get: function () {
+                    return this._pan;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(PanAndZoomGestures.prototype, "pinchZoom", {
+                get: function () {
+                    return this._pinchZoom;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(PanAndZoomGestures.prototype, "pointerDetector", {
+                get: function () {
+                    return this._pointerDetector;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return PanAndZoomGestures;
+        })();
+        utils.PanAndZoomGestures = PanAndZoomGestures;
+    })(utils || (utils = {}));
+///<reference path='../libs/three.d.ts'/>
+///<reference path='../libs/lib_extended.d.ts'/>
+///<reference path='../utils/SimpleSignal.ts'/>
+///<reference path='../Main.ts'/>
+///<reference path='../utils/interaction/mousewheel/MouseWheelDetector.ts'/>
+///<reference path='../utils/interaction/gestures/PanAndZoomGestures.ts'/>
+///<reference path='../utils/interaction/Pointer.ts'/>
+    var OrbitController = (function () {
+        function OrbitController(config) {
+            var _this = this;
+            this._o = new THREE.Vector3(0, this._offsetFromGround, 0);
+            this._x = new THREE.Vector3(1, 0, 0);
+            this._y = new THREE.Vector3(0, 1, 0);
+            this._z = new THREE.Vector3(0, 0, 1);
+            this._firstMove = true;
+            this._needsUpdate = false;
+            // ======================================================================================================
+            // Mousewheel, zoom
+            this.onMouseWheel = function (delta) {
+                var scale = delta < 0 ? _this._zoomScale.mouseWheel.zoom_in : _this._zoomScale.mouseWheel.zoom_out;
+                _this.scaleZoom(scale);
+            };
+            this._camera = config.camera;
+            this._element = config.element;
+            this._offsetFromGround = config.offsetFromGround;
+            this._o = new THREE.Vector3(0, this._offsetFromGround, 0);
+            this._mousewheelDetector = new utils.MouseWheelDetector({
+                element: this._element
+            });
+            var viewConfig = Main.getInstance().config.config.view;
+            this._easing = {
+                distance: viewConfig.easing.distance,
+                rotation: viewConfig.easing.rotation
+            };
+            this._distance = {
+                initial: config.distance.initial,
+                current: 0,
+                target: 0,
+                min: config.distance.min,
+                max: config.distance.max
+            };
+            this._zoomScale = {
+                press: {
+                    zoom_in: 1 / config.zoom.press,
+                    zoom_out: config.zoom.press
+                },
+                mouseWheel: {
+                    zoom_in: config.zoom.mouseWheel,
+                    zoom_out: 1 / config.zoom.mouseWheel
+                }
+            };
+            this._switchTransition = config.switchTransition;
+            this.cameraPositionSignal = new utils.SimpleSignal();
+            this.change = new utils.SimpleSignal();
+            this.updateAngles();
+            this._needsUpdate = true;
+            this.update(0);
+        }
+        // ======================================================================================================
+        // Enable, disable
+        OrbitController.prototype.enable = function () {
+            this._mousewheelDetector.wheelSignal.add(this.onMouseWheel);
+            this.switchToDefault(false);
+        };
+        OrbitController.prototype.disable = function () {
+            this._mousewheelDetector.wheelSignal.remove(this.onMouseWheel);
+        };
+        // ======================================================================================================
+        // Public rotation methods called by BuildingController
+        OrbitController.prototype.startRotation = function (pointer) {
+            this._phi_down = this._phi;
+            this._theta_down = this._theta;
+            this._firstMove = true;
+        };
+        OrbitController.prototype.updateRotation = function (pointer) {
+            var PIHalf = Math.PI / 2;
+            this._phi = this._phi_down - pointer.offsetX * 0.01;
+            // commented out because now we use easing
+            //this._phi = this._phi % (Math.PI * 2);
+            this._theta = this._theta_down + pointer.offsetY * 0.01;
+            this._theta = this._theta < -PIHalf ? -PIHalf : this._theta > PIHalf ? PIHalf : this._theta;
+            // clamp to be above ground
+            this._theta = Math.max(0.02, this._theta);
+            this._needsUpdate = true;
+            if (this._firstMove) {
+                this._firstMove = false;
+                this.change.dispatch();
+            }
+        };
+        OrbitController.prototype.endRotation = function (pointer) {
+            // TODO check
+        };
+        // ======================================================================================================
+        // Update
+        // called in requestAnimationFrame
+        OrbitController.prototype.update = function (dt) {
+            if (!this._needsUpdate) {
+                return false;
+            }
+            if (this._phi_current === undefined) {
+                this._phi_current = this._phi;
+            }
+            if (this._theta_current === undefined) {
+                this._theta_current = this._theta;
+            }
+            var eps = 0.0001;
+            var d_phi = this._phi - this._phi_current;
+            var d_theta = this._theta - this._theta_current;
+            var d_dist = this._distance.target - this._distance.current;
+            if (Math.abs(d_phi) < eps && Math.abs(d_theta) < eps && Math.abs(d_dist) < eps) {
+                this._needsUpdate = false;
+            }
+            this._phi_current += d_phi * this._easing.rotation;
+            this._theta_current += d_theta * this._easing.rotation;
+            this._distance.current += d_dist * this._easing.distance;
+            var phi = this._phi_current;
+            var theta = this._theta_current;
+            var m = new THREE.Matrix4().makeRotationAxis(this._y, phi);
+            this._right = this._x.clone();
+            this._right.applyMatrix4(m);
+            var cameraPos = this._z.clone().multiplyScalar(this._distance.current).applyMatrix4(m);
+            m.makeRotationAxis(this._right, -theta);
+            cameraPos.applyMatrix4(m);
+            cameraPos.y += this._offsetFromGround;
+            this._camera.position = cameraPos;
+            this._camera.lookAt(this._o);
+            // up
+            var view = new THREE.Vector3().subVectors(this._o, this._camera.position);
+            this._camera.up.crossVectors(this._right, view);
+            return true;
+        };
+        OrbitController.prototype.pressZoom = function (zoomIn) {
+            var scale = zoomIn ? this._zoomScale.press.zoom_in : this._zoomScale.press.zoom_out;
+            this.scaleZoom(scale);
+        };
+        OrbitController.prototype.scaleZoom = function (scale) {
+            this.setDistance(this.getDistance() * scale);
+        };
+        OrbitController.prototype.getDistance = function () {
+            return this._distance.target;
+        };
+        OrbitController.prototype.setDistance = function (value) {
+            this._distance.target = value;
+            this._distance.target = MathUtils.clamp(this._distance.target, this._distance.min, this._distance.max);
+            this._needsUpdate = true;
+            this.change.dispatch();
+        };
+        // ======================================================================================================
+        // Switch camera
+        OrbitController.prototype.switchToDefault = function (transition) {
+            if (transition === void 0) { transition = undefined; }
+            this._camera.up = new THREE.Vector3(0, 1, 0);
+            this.setCameraPosition(40, 30, this._distance.initial);
+            this._camera.lookAt(this._o);
+            if (transition === undefined) {
+                transition = this._switchTransition;
+            }
+            this.updateAngles(transition);
+        };
+        OrbitController.prototype.setCameraPosition = function (x, y, z) {
+            var pos = this._camera.position;
+            pos.set(x, y, z);
+            this.cameraPositionSignal.dispatch(pos);
+        };
+        OrbitController.prototype.switchTo = function (eye, up) {
+            var target = this._o;
+            //var view = new THREE.Vector3().subVectors(target, eye).normalize();
+            //var right = new THREE.Vector3().crossVectors(view, up);
+            this._camera.up = up;
+            this._camera.position = eye;
+            this._camera.lookAt(target);
+            this.updateAngles(this._switchTransition);
+        };
+        // updates angles from camera position
+        // called when a new camera is set
+        OrbitController.prototype.updateAngles = function (transition) {
+            if (transition === void 0) { transition = false; }
+            var cameraPos = this._camera.position;
+            var x = cameraPos.x;
+            var y = cameraPos.y;
+            var z = cameraPos.z;
+            this._theta = Math.atan(y / Math.sqrt(x * x + z * z));
+            this._phi = Math.atan2(x, z);
+            var dist = Math.sqrt(x * x + y * y + z * z);
+            this._distance.target = dist;
+            if (!transition) {
+                this._distance.current = dist;
+                this._theta_current = this._theta;
+                this._phi_current = this._phi;
+            }
+            else {
+                this._needsUpdate = true;
+            }
+        };
+        return OrbitController;
+    })();
+///<reference path='../libs/three.d.ts'/>
+///<reference path='../view/ViewPreset.ts'/>
+///<reference path='../view/accessories/AccessoryView.ts'/>
+///<reference path='../view/ContentView.ts'/>
+///<reference path='./ZoomController.ts'/>
+///<reference path='./OrbitController.ts'/>
+///<reference path='./NodePlacer.ts'/>
+    /**
+     * Manages OrbitController (which rotates, zooms the building) and
+     * NodePlacer which manages placing of new nodes on the building (doors, etc).
+     *
+     * With mouse controls: update on mousemove, placing on mouseclick.
+     * With touch: pan to drag position, add on end of drag. TODO consider adding on consequent tap?
+     */
+    var BuildingController = (function () {
+        function BuildingController(contentView, tools) {
+            var _this = this;
+            this._rotating = false;
+            this.onMoveIconClick = function (accessoryIcon) {
+                _this.startPlacing(accessoryIcon.accessory, accessoryIcon);
+            };
+            this.onSceneChange = function (state, node) {
+                if (state === 0 /* PLACING */) {
+                    // node becomes placing, ie. the user can move the mouse and find a place for it
+                    _this.startPlacing(_this._nodePlacer);
+                    document.body.addEventListener("mousemove", _this.onMouseHover);
+                }
+                else if (state === 2 /* CANCELED */ || state === 1 /* PLACED */) {
+                    // node is canceled or placed -> remove listeners, cursor style
+                    // dont dispatch another PLACED event, that will cause an infinite loop
+                    _this.finishPlacing(false);
+                    document.body.removeEventListener("mousemove", _this.onMouseHover);
+                    window.document.body.style.cursor = "";
+                }
+                Main.getInstance().render = true;
+            };
+            // ======================================================================================================
+            // pan
+            this.onPanStart = function (pointer) {
+                if (_this._placing) {
+                    _this.updatePlacingNodeByPointer(pointer);
+                }
+                var startRotating = !_this.placingNodeHasValidPlace();
+                if (startRotating) {
+                    _this._rotating = true;
+                    _this._controller.startRotation(pointer);
+                }
+                else {
+                    _this._rotating = false;
+                    _this.updatePlacingNodeByPointer(pointer);
+                }
+                Main.getInstance().render = true;
+            };
+            this.onPanUpdate = function (pointer) {
+                if (_this._rotating) {
+                    _this._controller.updateRotation(pointer);
+                }
+                else {
+                    _this.updatePlacingNodeByPointer(pointer);
+                }
+                Main.getInstance().render = true;
+            };
+            this.onPanEnd = function (pointer, breakingGesture) {
+                if (_this._rotating) {
+                    _this._rotating = false;
+                    _this._controller.endRotation(pointer);
+                }
+                else {
+                    // check if node can be added
+                    // only if there's no breaking gesture (pinch zoom), if there is
+                    // we don't want to place the item
+                    if (!breakingGesture) {
+                        _this.finishPlacing();
+                    }
+                }
+                Main.getInstance().render = true;
+            };
+            // this runs when the mouse hovers over the canvas in node placing mode
+            this.onMouseHover = function (event) {
+                var localCoords = _this._gestures.pointerDetector.getLocalCoords(event);
+                _this.updatePlacingNode(localCoords);
+            };
+            // ======================================================================================================
+            // viewpreset change
+            this.onUserChange = function () {
+                _this._viewPreset.value = "custom";
+            };
+            this.onViewPresetChange = function (preset) {
+                var eye = null;
+                var up = new THREE.Vector3(0, 1, 0);
+                var dist = _this._viewConfig.distance.initial;
+                var edgeHeight = 20;
+                var edgeX = 0.25 * dist;
+                var edgeZ = 0.8 * dist;
+                var frontBackHeight = 20;
+                var sideHeight = 10;
+                switch (preset) {
+                    case "top":
+                        eye = new THREE.Vector3(0, dist, 0);
+                        up = new THREE.Vector3(0, 0, -1);
+                        break;
+                    case "front":
+                        eye = new THREE.Vector3(0, frontBackHeight, dist);
+                        break;
+                    case "front-right":
+                        eye = new THREE.Vector3(edgeX, edgeHeight, edgeZ);
+                        break;
+                    case "right":
+                        eye = new THREE.Vector3(dist, sideHeight, 0);
+                        break;
+                    case "back-right":
+                        eye = new THREE.Vector3(edgeX, edgeHeight, -edgeZ);
+                        break;
+                    case "back":
+                        eye = new THREE.Vector3(0, frontBackHeight, -dist);
+                        break;
+                    case "back-left":
+                        eye = new THREE.Vector3(-edgeX, edgeHeight, -edgeZ);
+                        break;
+                    case "left":
+                        eye = new THREE.Vector3(-dist, sideHeight, 0);
+                        break;
+                    case "front-left":
+                        eye = new THREE.Vector3(-edgeX, edgeHeight, edgeZ);
+                        break;
+                    case "inside":
+                        eye = new THREE.Vector3(0, _this._offsetFromGround, -15);
+                        break;
+                    case "default":
+                        _this._controller.switchToDefault();
+                        return;
+                }
+                if (eye) {
+                    _this._controller.switchTo(eye, up);
+                }
+            };
+            this.onZoomChange = function (zoomIn) {
+                _this._controller.pressZoom(zoomIn);
+            };
+            this._viewConfig = contentView.config.config.view;
+            this._camera = contentView.camera;
+            this._element = contentView.canvas;
+            this._offsetFromGround = 4;
+            this._toolsView = tools;
+            // gestures
+            this._gestures = this.createGestures();
+            // nodePlacer
+            this._nodePlacer = new NodePlacer(contentView);
+            contentView.scene.changeSignal.add(this.onSceneChange, { scope: this });
+            // controller
+            this._controller = this.createController();
+            // viewPreset
+            this._viewPreset = new ViewPreset();
+            this._viewPreset.changeSignal.add(this.onViewPresetChange);
+            // accessoryView
+            this.initAccessoryView(contentView);
+            // zoomController
+            this._zoomController = new ZoomController();
+            this._zoomController.changeSignal.add(this.onZoomChange);
+            // miscellanious
+            this._isAddonPositionValid = false;
+        }
+        BuildingController.prototype.initAccessoryView = function (contentView) {
+            this._accessoryView = new AccessoryView({
+                accessoryConfig: contentView.config.config["accessories"],
+                accessories: contentView.config.accessories,
+                scene: contentView.scene3D
+            });
+            this._accessoryView.moveIconClickSignal.add(this.onMoveIconClick);
+        };
+        BuildingController.prototype.startPlacing = function (placer, accessoryIcon) {
+            this.stopPlacingAccessoryIcon();
+            this._placing = {
+                placer: placer,
+                accessoryIcon: accessoryIcon
+            };
+        };
+        BuildingController.prototype.stopPlacingAccessoryIcon = function () {
+            if (this._placing && this._placing.accessoryIcon) {
+                this._placing.accessoryIcon.stopPlacing();
+            }
+        };
+        BuildingController.prototype.createGestures = function () {
+            var gestures = new utils.PanAndZoomGestures({
+                element: this._element
+            });
+            gestures.pan.start.add(this.onPanStart, { scope: this });
+            gestures.pan.update.add(this.onPanUpdate, { scope: this });
+            gestures.pan.end.add(this.onPanEnd, { scope: this });
+            gestures.pinchZoom.startSignal.add(this.onPinchZoomStart, { scope: this });
+            gestures.pinchZoom.updateSignal.add(this.onPinchZoomUpdate, { scope: this });
+            return gestures;
+        };
+        BuildingController.prototype.createController = function () {
+            var viewConfig = this._viewConfig;
+            var orbitControllerConfig = {
+                camera: this._camera,
+                element: this._element,
+                easing: {
+                    distance: viewConfig.easing.distance,
+                    rotation: viewConfig.easing.rotation
+                },
+                distance: {
+                    initial: viewConfig.distance.initial,
+                    min: viewConfig.distance.min,
+                    max: viewConfig.distance.max
+                },
+                zoom: {
+                    press: 1.2,
+                    mouseWheel: 1.1
+                },
+                switchTransition: true,
+                offsetFromGround: this._offsetFromGround
+            };
+            var controller = new OrbitController(orbitControllerConfig);
+            controller.enable();
+            controller.change.add(this.onUserChange);
+            return controller;
+        };
+        BuildingController.prototype.placingNodeHasValidPlace = function () {
+            if (this._placing) {
+                return this._placing.placer.getPlacingNodeHasValidPlace();
+            }
+            return false;
+        };
+        BuildingController.prototype.finishPlacing = function (dispatch) {
+            if (dispatch === void 0) { dispatch = true; }
+            var placeSuccessful = null;
+            if (this._isAddonPositionValid === true) {
+                placeSuccessful = this._placing.placer.placeNode(dispatch);
+            }
+            // example for unsuccessful placing: when placing a door but releasing on the ground
+            if (placeSuccessful) {
+                this.stopPlacingAccessoryIcon();
+                this._placing = null;
+            }
+            Main.getInstance().render = true;
+        };
+        // updates the position of the currently placing node
+        BuildingController.prototype.updatePlacingNode = function (position) {
+            // convert from [0, x] to [-1, 1]
+            position[0] = (position[0] / this._element.clientWidth) * 2 - 1;
+            position[1] = -(position[1] / this._element.clientHeight) * 2 + 1;
+            this._isAddonPositionValid = this._placing.placer.updatePosition(position, this._camera);
+            Main.getInstance().render = true;
+        };
+        BuildingController.prototype.updatePlacingNodeByPointer = function (pointer) {
+            this.updatePlacingNode([pointer.localX, pointer.localY]);
+            Main.getInstance().render = true;
+        };
+        // ======================================================================================================
+        // pinch zoom
+        BuildingController.prototype.onPinchZoomStart = function (zoomData) {
+            this._startPinchDistance = this._controller.getDistance();
+            console.log("pinch zoom start");
+        };
+        BuildingController.prototype.onPinchZoomUpdate = function (zoomData) {
+            var zoomRatio = 1 / (zoomData.distance / zoomData.startDistance);
+            var distance = this._startPinchDistance * zoomRatio;
+            this._controller.setDistance(distance);
+        };
+        BuildingController.prototype.update = function (dt) {
+            if (this._controller) {
+                return this._controller.update(dt);
+            }
+            return true;
+        };
+        Object.defineProperty(BuildingController.prototype, "accessoryView", {
+            get: function () {
+                return this._accessoryView;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return BuildingController;
+    })();
+
 };
