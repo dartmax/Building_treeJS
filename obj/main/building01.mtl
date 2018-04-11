@@ -1,21 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 11.04.2018 18:03:35
-
-newmtl opalub_mtl01
-	Ns 9.999999
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 0.588000 0.588000 0.588000
-	Kd 0.588000 0.588000 0.588000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S.jpg
-	map_Kd D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S.jpg
-	map_bump D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S_bump.png
-	bump D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S_bump.png
+# File Created: 11.04.2018 22:29:23
 
 newmtl floor
 	Ns 9.999999
@@ -26,18 +10,6 @@ newmtl floor
 	illum 2
 	Ka 0.588000 0.588000 0.588000
 	Kd 0.588000 0.588000 0.588000
-	Ks 0.000000 0.000000 0.000000
-	Ke 0.000000 0.000000 0.000000
-
-newmtl profile
-	Ns 9.999999
-	Ni 1.500000
-	d 1.000000
-	Tr 0.000000
-	Tf 1.000000 1.000000 1.000000 
-	illum 2
-	Ka 0.588235 0.149020 0.000000
-	Kd 0.588235 0.149020 0.000000
 	Ks 0.000000 0.000000 0.000000
 	Ke 0.000000 0.000000 0.000000
 
