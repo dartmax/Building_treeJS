@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BUILD</title>
+
+    <link rel="shortcut icon" href="img/favicon.png" type="image/png">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+</head>
+<body>
+
+    <div id="main">
+
+
+        <header class="app-header">
+            <!--header-->
+        </header>
+        <div class="app-content">
+            <div class="app-content_sidebar">
+                <div class="sidebar-logo">LOGO</div>
+                <div class="sidebar-drop_down_list-container">
+
+                    <!-- Bulding Size -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Building Size</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+                                <!-- width -->
+                                <div class="item-field">
+                                    <p class="item-field-title">Width:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range bulding_size_width" id="bulding_size_width-range" type="range" min="5" max="60" step="1" value="5">
+                                        <input class="default-input-number bulding_size_width" id="bulding_size_width-number" type="number" min="5" max="60" step="1" value="5">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <!-- length -->
+                                <div class="item-field">
+                                    <p class="item-field-title">Length:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range2 bulding_size_length2" id="bulding_size_length-range2" type="range" min="5" max="200" step="1" value="5">
+                                        <input class="default-input-number2 bulding_size_length2" id="bulding_size_length-number2" type="number" min="5" max="200" step="1" value="5">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <!-- height -->
+                                <div class="item-field">
+                                    <p class="item-field-title">Height:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range3 bulding_size_height3" id="bulding_size_height-range3" type="range" min="5" max="24" step="1" value="5">
+                                        <input class="default-input-number3 bulding_size_height3" id="bulding_size_height-number3" type="number" min="5" max="24" step="1" value="5">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <!-- pitch -->
+                                <div class="item-field">
+                                    <p class="item-field-title">Pitch:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range4" id="bulding_size_pitch-range4" type="range" min="1" max="5" step="1" value="1">
+                                        <input class="default-input-number4" id="bulding_size_pitch-number4" type="number" min="1" max="5" step="1" value="1">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <div class="item-field">
+                                    <p class="item-field-title">Overhang</p>
+                                </div>
+                                <!-- sides -->
+                                <div class="item-field">
+                                    <p class="item-field-title">- Sides:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range5" id="bulding_size_sides-range5" type="range" min="0" max="5" step="1" value="1">
+                                        <input class="default-input-number5" id="bulding_size_sides-number5" type="number" min="0" max="5" step="1" value="1">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <!-- end -->
+                                <div class="item-field">
+                                    <p class="item-field-title">- End:</p>
+                                    <label class="item-field-input">
+                                        <input class="default-input-range6" id="bulding_size_end-range6" type="range" min="0" max="5" step="1" value="0">
+                                        <input class="default-input-number6" id="bulding_size_end-number6" type="number" min="0" max="5" step="1" value="0">
+                                    </label>
+                                    <p class="item-field-metric">&nbsp;&nbsp;</p>
+                                </div>
+                                <!-- single slope -->
+                                <div class="item-field single">
+                                    <p class="item-field-title">Single slope:</p>
+                                    <label class="item-field-input">
+                                        <select class="default-select" id="bulding_size_slope">
+                                            <option value="0">None</option>
+                                            <option value="1">Right</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Selections -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Color Selections</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+                                <!-- wall -->
+                                <div class="item-field">
+                                    <p class="item-field-title">Wall:</p>
+                                    <div class="default-input-range item-field-input" id="color_selection-custom_select">
+                                        <div class="color-box" style="background-color: #004769"></div>
+                                        <span class="color-span">Deep Blue</span>
+                                    </div>
+                                    <div class="color-list hidden">
+                                        <div class="color-option" data-value="#ffffff">
+                                            <div class="color-box" style="background-color: #ffffff"></div>
+                                            <span class="color-span">Please Select</span>
+                                        </div>
+                                        <div class="color-option" data-value="#D0D6D6">
+                                            <div class="color-box" style="background-color: #D0D6D6"></div>
+                                            <span class="color-span">Galvalume Plus</span>
+                                        </div>
+                                        <div class="color-option" data-value="#d8e5e6">
+                                            <div class="color-box" style="background-color: #d8e5e6"></div>
+                                            <span class="color-span">White</span>
+                                        </div>
+                                        <div class="color-option" data-value="#dad0ca">
+                                            <div class="color-box" style="background-color: #dad0ca"></div>
+                                            <span class="color-span">Twilight Gray</span>
+                                        </div>
+                                        <div class="color-option" data-value="#bbb0a3">
+                                            <div class="color-box" style="background-color: #bbb0a3"></div>
+                                            <span class="color-span">Smokey Pewter</span>
+                                        </div>
+                                        <div class="color-option" data-value="#a4a89c">
+                                            <div class="color-box" style="background-color: #a4a89c"></div>
+                                            <span class="color-span">Light Gray</span>
+                                        </div>
+                                        <div class="color-option" data-value="#8b8c8d">
+                                            <div class="color-box" style="background-color: #8b8c8d"></div>
+                                            <span class="color-span">Silver Metallic</span>
+                                        </div>
+                                        <div class="color-option" data-value="#949ca1">
+                                            <div class="color-box" style="background-color: #949ca1"></div>
+                                            <span class="color-span">Smokestack Gray</span>
+                                        </div>
+                                        <div class="color-option" data-value="#200000">
+                                            <div class="color-box" style="background-color: #200000"></div>
+                                            <span class="color-span">Black</span>
+                                        </div>
+                                        <div class="color-option" data-value="#636466">
+                                            <div class="color-box" style="background-color: #636466"></div>
+                                            <span class="color-span">Charcoal</span>
+                                        </div>
+                                        <div class="color-option" data-value="#425968">
+                                            <div class="color-box" style="background-color: #425968"></div>
+                                            <span class="color-span">Deep River Blue</span>
+                                        </div>
+                                        <div class="color-option selected" data-value="#004769">
+                                            <div class="color-box" style="background-color: #004769"></div>
+                                            <span class="color-span">Deep Blue</span>
+                                        </div>
+                                        <div class="color-option" data-value="#217497">
+                                            <div class="color-box" style="background-color: #217497"></div>
+                                            <span class="color-span">Hawaiian Blue</span>
+                                        </div>
+                                        <div class="color-option" data-value="#398e8a">
+                                            <div class="color-box" style="background-color: #398e8a"></div>
+                                            <span class="color-span">Marine Green</span>
+                                        </div>
+                                        <div class="color-option" data-value="#374c48">
+                                            <div class="color-box" style="background-color: #374c48"></div>
+                                            <span class="color-span">Forest Green</span>
+                                        </div>
+                                        <div class="color-option" data-value="#376351">
+                                            <div class="color-box" style="background-color: #376351"></div>
+                                            <span class="color-span">Deep Green</span>
+                                        </div>
+                                        <div class="color-option" data-value="#004833">
+                                            <div class="color-box" style="background-color: #004833"></div>
+                                            <span class="color-span">Ivy Green</span>
+                                        </div>
+                                        <div class="color-option" data-value="#627f70">
+                                            <div class="color-box" style="background-color: #627f70"></div>
+                                            <span class="color-span">Colony Green</span>
+                                        </div>
+                                        <div class="color-option" data-value="#301e00">
+                                            <div class="color-box" style="background-color: #301e00"></div>
+                                            <span class="color-span">Mansard Brown</span>
+                                        </div>
+                                        <div class="color-option" data-value="#4e4436">
+                                            <div class="color-box" style="background-color: #4e4436"></div>
+                                            <span class="color-span">Burnished Slate</span>
+                                        </div>
+                                        <div class="color-option" data-value="#4b3d2a">
+                                            <div class="color-box" style="background-color: #4b3d2a"></div>
+                                            <span class="color-span">Coco Brown</span>
+                                        </div>
+                                        <div class="color-option" data-value="#7c6a55">
+                                            <div class="color-box" style="background-color: #7c6a55"></div>
+                                            <span class="color-span">Chestnut Brown</span>
+                                        </div>
+                                        <div class="color-option" data-value="#8a7967">
+                                            <div class="color-box" style="background-color: #8a7967"></div>
+                                            <span class="color-span">Saddle Leather Brown</span>
+                                        </div>
+                                        <div class="color-option" data-value="#91665a">
+                                            <div class="color-box" style="background-color: #91665a"></div>
+                                            <span class="color-span">Rustic Brown</span>
+                                        </div>
+                                        <div class="color-option" data-value="#933c06">
+                                            <div class="color-box" style="background-color: #933c06"></div>
+                                            <span class="color-span">Rustic Red</span>
+                                        </div>
+                                        <div class="color-option" data-value="#6a2316">
+                                            <div class="color-box" style="background-color: #6a2316"></div>
+                                            <span class="color-span">Burgundy</span>
+                                        </div>
+                                        <div class="color-option" data-value="#a11d21">
+                                            <div class="color-box" style="background-color: #a11d21"></div>
+                                            <span class="color-span">Patriot Red</span>
+                                        </div>
+                                        <div class="color-option" data-value="#b45340">
+                                            <div class="color-box" style="background-color: #b45340"></div>
+                                            <span class="color-span">Sunset Red</span>
+                                        </div>
+                                        <div class="color-option" data-value="#8e654c">
+                                            <div class="color-box" style="background-color: #8e654c"></div>
+                                            <span class="color-span">Bright Copper</span>
+                                        </div>
+                                        <div class="color-option" data-value="#baa273">
+                                            <div class="color-box" style="background-color: #baa273"></div>
+                                            <span class="color-span">Tan</span>
+                                        </div>
+                                        <div class="color-option" data-value="#c1a870">
+                                            <div class="color-box" style="background-color: #c1a870"></div>
+                                            <span class="color-span">Gold</span>
+                                        </div>
+                                        <div class="color-option" data-value="#b3a88b">
+                                            <div class="color-box" style="background-color: #b3a88b"></div>
+                                            <span class="color-span">Desert Tan</span>
+                                        </div>
+                                        <div class="color-option" data-value="#cfcaa8">
+                                            <div class="color-box" style="background-color: #cfcaa8"></div>
+                                            <span class="color-span">Light Stone</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ridge Vent -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Ridge Vent</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Wainscot -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Wainscot</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lean-to -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Lean-to</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gutter -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Gutter</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interior Framework -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Interior Framework</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Doors and Windows -->
+                    <div class="drop_down_list-item">
+                        <div class="item-title">
+                            <p>Add Doors and Windows</p>
+                            <div class="drop_down-animate">
+                                <div class="ver-line"></div>
+                                <div class="hor-line"></div>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-conten-buffer">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="app-canvas">
+                <div class="app-canvas_navigation">
+                    <div class="app-canvas_navigation-select">
+                        <label>
+                            View
+                            <select class="default_select" id="select_view">
+                                <option value="0">Default</option>
+                                <option value="1">Custom</option>
+                                <option value="2">Top</option>
+                                <option value="3">Front</option>
+                                <option value="4">Front-Right</option>
+                                <option value="5">Right</option>
+                                <option value="6">Back-Right</option>
+                                <option value="7">Back</option>
+                                <option value="8">Back-Left</option>
+                                <option value="9">Left</option>
+                                <option value="10">Front-Left</option>
+                                <option value="11">Inside</option>
+                            </select>
+                        </label>
+                        <label>
+                            Scene
+                            <select class="default_select" id="select_scene">
+                                <option value="0">Default</option>
+                                <option value="1">East Texas</option>
+                                <option value="2">Mountains</option>
+                                <option value="3">West Texas</option>
+                            </select>
+                        </label>
+                    </div>
+                    <button class="navigation_button_canvas" id="zoom_in">
+                        <img class="toggle_auto" src="img/zoom_in.svg" alt="">
+                    </button>
+                    <button class="navigation_button_canvas" id="zoom_out">
+                        <img class="toggle_auto" src="img/zoom_out.svg" alt="">
+                    </button>
+                    <button class="navigation_button_canvas" id="add_auto">
+                        <img class="toggle_auto" src="img/truck.svg" alt="">
+                        <img class="moving_auto hidden_access" src="img/move.svg" alt="">
+                    </button>
+                    <button class="navigation_button_canvas" id="add_person">
+                        <img class="toggle_person" src="img/person.svg" alt="">
+                        <img class="moving_person hidden_access" src="img/move.svg" alt="">
+                    </button>
+                </div>
+                <canvas id="app">
+                    <p>Your browser does not support canvas</p>
+                </canvas>
+            </div>
+        </div>
+        <footer class="app-footer">
+            <!--footer-->
+        </footer>
+    </div>
+
+    <!-- custom js -->
+    <script src="http://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="js/libs/three.min.js"></script>
+    <script src="js/libs/OrbitControls.js"></script>
+    <script src="js/libs/OBJLoader.js"></script>
+    <script src="js/libs/MTLLoader.js"></script>
+    <script src="js/libs/TGALoader.js"></script>
+    <script src="js/libs/Tween.js"></script>
+    <script src="js/custom.js"></script>
+
+</body>
+</html>

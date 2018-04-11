@@ -1,0 +1,58 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 10.04.2018 23:57:44
+
+newmtl opalub_mtl01
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588000 0.588000 0.588000
+	Kd 0.588000 0.588000 0.588000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S.jpg
+	map_Kd D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S.jpg
+	map_bump D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S_bump.png
+	bump D:\Max\Work\webGl\assets\img\ConcreteBare0350_7_S_bump.png
+
+newmtl wall_mtl01
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588000 0.588000 0.588000
+	Kd 0.588000 0.588000 0.588000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka Map__13_Color_Correction.tga
+	map_Kd Map__13_Color_Correction.tga
+	map_bump D:\Max\Work\webGl\assets\img\wall_panel_normal.png
+	bump D:\Max\Work\webGl\assets\img\wall_panel_normal.png
+
+newmtl floor
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588000 0.588000 0.588000
+	Kd 0.588000 0.588000 0.588000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+
+newmtl profile
+	Ns 10.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.588235 0.149020 0.000000
+	Kd 0.588235 0.149020 0.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
