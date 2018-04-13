@@ -106,7 +106,7 @@ window.onload = function() {
 			mtl: 'build01end.mtl'
 		},
 	//	etalon size obj
-		01: {
+		etalon: {
 			path: 'obj/main/',
 			obj: '01.obj',
 			mtl: '01.mtl'
@@ -140,7 +140,7 @@ window.onload = function() {
 				main_settings.camera.minDistance,
 				main_settings.camera.maxDistance
 			),
-			autoObj = [], manObj = [], mainObj = [], treeObj = [], controls, mouse,
+			autoObj = [], manObj = [], mainObj = [], treeObj = [], etalonObj = [], controls, mouse,
 			backgroundGeometry, backgroundMaterial, backgroundMesh, groundTexture, groundGeometry, groundMaterial, groundCircle;
 
 	renderer.setSize( main_settings.width, main_settings.height );
@@ -258,7 +258,7 @@ window.onload = function() {
 		loadObj( main_settings.auto.path, main_settings.auto.obj, main_settings.auto.mtl, true, {x: -500, y:0, z:-1500}, 1, {x: 0,y:0,z:0}, 'auto', autoObj );
 		loadObj( main_settings.man.path, main_settings.man.obj, main_settings.man.mtl, true, {x: -700, y:0, z:-1500}, 1, {x: 0,y:0,z:0}, 'person', manObj );
 		loadObj( main_settings.main.path, main_settings.main.obj, main_settings.main.mtl, true, {x: 0, y:5, z:0}, 5, {x: -Math.PI / 2,y:0,z:0}, 'main', mainObj );
-		loadObj( main_settings.01.path, main_settings.main.obj, main_settings.01.mtl, true, {x: 0, y:5, z:0}, 5, {x: -Math.PI / 2,y:0,z:0}, '01', mainObj );
+		loadObj( main_settings.etalon.path, main_settings.main.obj, main_settings.etalon.mtl, true, {x: 0, y:5, z:0}, 5, {x: -Math.PI / 2,y:0,z:0}, 'etalon', mainObj );
 
 
 	})();
