@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 13.04.2018 19:25:58
+# File Created: 13.04.2018 19:31:31
 
 newmtl RL_Skin02_002
 	Ns 3.921569
@@ -12,8 +12,8 @@ newmtl RL_Skin02_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_27.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_27.jpg
+	map_Ka Boy_Standing_27.jpg
+	map_Kd Boy_Standing_27.jpg
 
 newmtl RL_Shoes_002
 	Ns 3.921569
@@ -26,8 +26,8 @@ newmtl RL_Shoes_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_4.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_4.jpg
+	map_Ka Boy_Standing_4.jpg
+	map_Kd Boy_Standing_4.jpg
 
 newmtl RL_Skin_002
 	Ns 3.921569
@@ -40,8 +40,8 @@ newmtl RL_Skin_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
+	map_Ka Boy_Standing_3.jpg
+	map_Kd Boy_Standing_3.jpg
 
 newmtl Skin_002
 	Ns 3.921569
@@ -54,8 +54,8 @@ newmtl Skin_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
+	map_Ka Boy_Standing_3.jpg
+	map_Kd Boy_Standing_3.jpg
 
 newmtl RL_Upper_002
 	Ns 3.921569
@@ -68,8 +68,8 @@ newmtl RL_Upper_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_Default_01.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_Default_01.jpg
+	map_Ka Boy_Standing_Default_01.jpg
+	map_Kd Boy_Standing_Default_01.jpg
 
 newmtl RL_Iris00_002
 	Ns 0.000000
@@ -82,8 +82,8 @@ newmtl RL_Iris00_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_34.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_34.jpg
+	map_Ka Boy_Standing_34.jpg
+	map_Kd Boy_Standing_34.jpg
 
 newmtl RL_Hair_002_Boy_Standing_35_jpg
 	Ns 3.921569
@@ -96,8 +96,8 @@ newmtl RL_Hair_002_Boy_Standing_35_jpg
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_35.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_35.jpg
+	map_Ka Boy_Standing_35.jpg
+	map_Kd Boy_Standing_35.jpg
 
 newmtl RL_Hair_002
 	Ns 3.921569
@@ -110,8 +110,8 @@ newmtl RL_Hair_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_35.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_35.jpg
+	map_Ka Boy_Standing_35.jpg
+	map_Kd Boy_Standing_35.jpg
 
 newmtl RL_Iris_002
 	Ns 0.000000
@@ -124,8 +124,8 @@ newmtl RL_Iris_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_33.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_33.jpg
+	map_Ka Boy_Standing_33.jpg
+	map_Kd Boy_Standing_33.jpg
 
 newmtl RL_Skin00_002
 	Ns 3.921569
@@ -138,8 +138,8 @@ newmtl RL_Skin00_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_1.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_1.jpg
+	map_Ka Boy_Standing_1.jpg
+	map_Kd Boy_Standing_1.jpg
 
 newmtl RL_Lower_002
 	Ns 3.921569
@@ -152,8 +152,8 @@ newmtl RL_Lower_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_0.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_0.jpg
+	map_Ka Boy_Standing_0.jpg
+	map_Kd Boy_Standing_0.jpg
 
 newmtl RL_Skin01_002
 	Ns 3.921569
@@ -166,5 +166,5 @@ newmtl RL_Skin01_002
 	Kd 0.640000 0.640000 0.640000
 	Ks 0.050000 0.050000 0.050000
 	Ke 0.000000 0.000000 0.000000
-	map_Ka D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
-	map_Kd D:\Max\Work\webGl\project\project\obj\boy\Boy_Standing_3.jpg
+	map_Ka Boy_Standing_3.jpg
+	map_Kd Boy_Standing_3.jpg
