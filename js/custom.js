@@ -1,15 +1,15 @@
 window.onload = function() {
 
 	var static_w = [
-		'roof_profile011'
+		'shweller'
 	];
 	
 	var static_h = [
-		
+		'shweller'
 	];
 
 	var static_l = [
-		
+		'shweller'
 	];
 
 	var main_settings = {
